@@ -34,3 +34,11 @@ COMMENT ON COLUMN SAALEM.ADM_CHECKLIST_MATRIX.DATE_CREATED IS 'Ngày tạo';
 COMMENT ON COLUMN SAALEM.ADM_CHECKLIST_MATRIX.USER_UPDATED IS 'Người cập nhật';
 COMMENT ON COLUMN SAALEM.ADM_CHECKLIST_MATRIX.DATE_UPDATED IS 'Ngày cập nhật';
 COMMENT ON COLUMN SAALEM.ADM_CHECKLIST_MATRIX.CLIGM_STATUS IS 'Trạng thái item checklist matrix';
+---
+## Insert Sample
+Insert into ADM_CHECKLIST_MATRIX (CLI_ID,CLGROUP_TYPE,CLGROUP_CODE,CLITEM_CODE,CLITEM_NAME,USER_CREATED,DATE_CREATED,USER_UPDATED,DATE_UPDATED,CLIGM_STATUS) values (44,'LOAINHOMCL05','QD13_KHCN_05','QD13_KHCN_05_04','Biên nhận đã thanh toán/ Xác nhận đã thanh toán công nợ của bên bán hàng (nếu có).','hanhtt',to_date('30-09-2024 13:59:50343','DD-MM-YYYY HH24:MI:SSSSS'),'hanhtt',to_date('30-09-2024 13:59:50343','DD-MM-YYYY HH24:MI:SSSSS'),1);
+Insert into ADM_CHECKLIST_MATRIX (CLI_ID,CLGROUP_TYPE,CLGROUP_CODE,CLITEM_CODE,CLITEM_NAME,USER_CREATED,DATE_CREATED,USER_UPDATED,DATE_UPDATED,CLIGM_STATUS) values (46,'LOAINHOMCL05','QD13_KHCN_06','QD13_KHCN_06_02','Văn bản/ Hợp đồng chuyển nhượng BĐS có công chứng/ chứng thực theo quy định của Pháp luật (1)','hanhtt',to_date('30-09-2024 13:59:50343','DD-MM-YYYY HH24:MI:SSSSS'),'hanhtt',to_date('30-09-2024 13:59:50343','DD-MM-YYYY HH24:MI:SSSSS'),1);
+## Dữ liệu khi cho bảng này là:
+
+CLGN01 | Checklist Giải ngân / Phát hành bảo lãnh lần đầu | CLGN01_01 | Đề nghị giải ngân/phát hành cam kết bảo lãnh (nếu có)
+QD13_KHCN_01 | Checklist Vay vốn lưu động-Giải ngân thanh toán theo hóa đơn mua hàng | QD13_KHCN_01_01 | Hóa đơn mua hàng (Hóa đơn VAT/ Hóa đơn điện tử/ Hóa đơn bán lẻ).

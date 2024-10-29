@@ -44,7 +44,7 @@ Viết PROCEDURE tìm kiếm các COLUMNS CLI_ID,CLITEM_CODE, CLITEM_NAME,CLITEM
 
 Yều cầu 5:
 Viết PROCEDURE tìm kiếm các record của bảng ADM_CHECKLIST_MATRIX theo input dạng VARCHAR2 là danh sách các CLGROUP_CODE.
-Ví dụ input: 'QD13_KHCN_05, QD13_KHCN_06'
+Ví dụ input: 'QD13_KHCN_05,QD13_KHCN_06'
 
 ----------------------------------------------------------
 Insert into ADM_CHECKLIST_MATRIX (CLI_ID,CLGROUP_TYPE,CLGROUP_CODE,CLITEM_CODE,CLITEM_NAME,USER_CREATED,DATE_CREATED,USER_UPDATED,DATE_UPDATED,CLIGM_STATUS) values (44,'LOAINHOMCL05','QD13_KHCN_05','QD13_KHCN_05_04','Biên nhận đã thanh toán/ Xác nhận đã thanh toán công nợ của bên bán hàng (nếu có).','hanhtt',to_date('30-09-2024 13:59:50343','DD-MM-YYYY HH24:MI:SSSSS'),'hanhtt',to_date('30-09-2024 13:59:50343','DD-MM-YYYY HH24:MI:SSSSS'),1);

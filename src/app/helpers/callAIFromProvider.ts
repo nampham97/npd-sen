@@ -11,10 +11,10 @@ export default async function callFromAIWithGPT4(message: OpenAI.Chat.ChatComple
     const completion = await client.chat.completions.create({
         model: model,
         messages: message,
-        max_tokens: 350,
-        temperature: 0.5,
+        max_tokens: 500,
+        temperature: 0.4,
     });
-    
+    console.log('tokehn comple:', completion.usage?.completion_tokens)
     const responseAI = completion.choices[0].message?.content?.trim();
 
     return responseAI || '';
@@ -22,6 +22,7 @@ export default async function callFromAIWithGPT4(message: OpenAI.Chat.ChatComple
     return `Failed to fetch GPT-4.0 response: ${error}`;
   }
 }
+
 
 function getLlmProvider(LLM_PROVIDER : string) {
     if (LLM_PROVIDER === "GROQ") {
@@ -41,7 +42,7 @@ function getModelBaseOnProvider(provider: string) : string {
     if (provider === "GROQ") {
         return process.env.GROQ_MODEL || 'llama-3.1-70b-versatile';
     }
-    if (provider === "GPT4") {
+    if (provider === "OPENAI") {
         return process.env.OPENAI_MODEL_1 || "gpt-3.5-turbo-0125";
     }
     return 'default-model'; // Add a default return statement
