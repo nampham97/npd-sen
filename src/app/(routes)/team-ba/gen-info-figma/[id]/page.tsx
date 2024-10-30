@@ -3,7 +3,7 @@ import { useParams, useSearchParams } from "next/navigation";
 import React from "react";
 
 function Page() {
-  const xFigmaToken = "figd_wwMS0fwTaiG50Nzw7-yuLTK3d7t_gW7Z3AC7Cb67";
+  const xFigmaToken = process.env.NEXT_PUBLIC_XFIGMATOKEN!;
   const params = useParams();
   const { id } = params;
   const queryParams = useSearchParams();
