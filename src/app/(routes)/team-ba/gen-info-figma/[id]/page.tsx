@@ -1,9 +1,9 @@
 "use client";
+import { APIGetDetailNode } from "@/app/apis/Figma";
 import { useParams, useSearchParams } from "next/navigation";
 import React from "react";
 
 function Page() {
-  const xFigmaToken = process.env.NEXT_PUBLIC_XFIGMATOKEN!;
   const params = useParams();
   const { id } = params;
   const queryParams = useSearchParams();
@@ -11,54 +11,53 @@ function Page() {
 
   React.useEffect(() => {
     const handleGetControl = async (nodeid: string) => {
-      console.log(nodeid);
-      try {
-        const response = await fetch(
-          `https://api.figma.com/v1/files/${queryParams.get(
-            "idFigma"
-          )}/nodes?ids=${nodeid}`,
-          {
-            method: "GET",
-            headers: {
-              "X-Figma-Token": xFigmaToken,
-            },
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error(`Lỗi: ${response.status}`);
-        }
-
-        const data = await response.json();
+      const res = await APIGetDetailNode(queryParams.get("idFigma")!, nodeid);
+      if (res.status === 200 || res.status === 201) {
+        const data = res.data;
         const nodeData =
           data.nodes[nodeid.replace("-", ":")]?.document?.children;
         if (!nodeData) {
           throw new Error("Không tìm thấy node");
         }
-
-        const rs = nodeData.map((node: any) => {
-          if (node.children) {
-            return node.children.map((child: any) => ({
-              name: child.name,
-              type: child.type,
-              absoluteBoundingBox: child.absoluteBoundingBox,
-              absoluteRenderBounds: child.absoluteRenderBounds,
-              backgroundColor: child.backgroundColor,
-            }));
+        const rs = [] as any[];
+        const listExcept = [
+          "Rectangle",
+          "Vector",
+          "chevron",
+          "Label",
+          "bx:",
+          "uil:",
+          "Dashboards",
+          "Công việc của tôi",
+          "image",
+          "formkit:",
+        ];
+        nodeData.map((node: any) => {
+          if (node.children?.length) {
+            return node.children.map((child: any) => {
+              if (listExcept.every((item) => !child.name.includes(item))) {
+                rs.push({
+                  name: child.name,
+                  type: child.type,
+                  absoluteBoundingBox: child.absoluteBoundingBox,
+                  absoluteRenderBounds: child.absoluteRenderBounds,
+                  backgroundColor: child.backgroundColor,
+                });
+              }
+            });
           }
-          return {
-            name: node.name,
-            type: node.type,
-            absoluteBoundingBox: node.absoluteBoundingBox,
-            absoluteRenderBounds: node.absoluteRenderBounds,
-            backgroundColor: node.backgroundColor,
-          };
+          if (listExcept.every((item) => !node.name.includes(item))) {
+            rs.push({
+              name: node.name,
+              type: node.type,
+              absoluteBoundingBox: node.absoluteBoundingBox,
+              absoluteRenderBounds: node.absoluteRenderBounds,
+              backgroundColor: node.backgroundColor,
+            });
+          }
         });
 
-        console.log(rs);
         setResult(rs);
-      } catch (error) {
-        console.error("Lỗi từ Figma:", error);
       }
     };
     if (id) {

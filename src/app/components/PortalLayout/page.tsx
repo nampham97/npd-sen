@@ -2,8 +2,17 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { ChevronDown, Database, LineChart, Menu, User, X } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import {
+  ChevronDown,
+  Database,
+  LineChart,
+  LogOut,
+  Menu,
+  User,
+  X,
+} from "lucide-react";
+import { CheckRole } from "@/utils/CheckRole";
 
 type MenuItem = {
   name: string;
@@ -59,7 +68,7 @@ export default function PortalLayout({
     menuSections.map((section) => section.name)
   );
   const pathname = usePathname();
-
+  const router = useRouter();
   const toggleSection = (sectionName: string) => {
     setOpenSections((prev) =>
       prev.includes(sectionName)
@@ -67,7 +76,14 @@ export default function PortalLayout({
         : [...prev, sectionName]
     );
   };
-
+  const userName = localStorage
+    .getItem("user_NPDSEN")!
+    .split("_")[0]
+    ?.toUpperCase();
+  const SignOut = () => {
+    localStorage.removeItem("user_NPDSEN");
+    window.location.href = "/login";
+  };
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
@@ -101,10 +117,19 @@ export default function PortalLayout({
               {openSections.includes(section.name) && (
                 <ul className="mt-2 space-y-2">
                   {section.items.map((item) => (
-                    <li key={item.name}>
-                      <Link
-                        href={item.href}
-                        className={`flex items-center px-4 py-2 text-sm rounded-lg ${
+                    <li key={item.name} className="">
+                      <div
+                        onClick={() => {
+                          const isAllow = CheckRole(item.href);
+                          if (isAllow) {
+                            router.push(item.href);
+                          }
+                        }}
+                        className={`${
+                          CheckRole(item.href)
+                            ? "cursor-pointer"
+                            : "cursor-not-allowed"
+                        } flex items-center px-4 py-2 text-sm rounded-lg ${
                           pathname === item.href
                             ? "text-white bg-gray-800"
                             : "text-gray-700 hover:bg-gray-100"
@@ -112,13 +137,20 @@ export default function PortalLayout({
                       >
                         {item.icon}
                         <span className="ml-3">{item.name}</span>
-                      </Link>
+                      </div>
                     </li>
                   ))}
                 </ul>
               )}
             </div>
           ))}
+          <div
+            onClick={() => SignOut()}
+            className={`flex justify-center mx-2 cursor-pointer bg-red-500 items-center py-2 px-4 mt-4 text-sm rounded-lg "text-gray-700 `}
+          >
+            <LogOut className="w-4 h-4 text-white" />
+            <span className="text-white ml-3">Đăng xuất</span>
+          </div>
         </nav>
       </aside>
 
@@ -133,7 +165,9 @@ export default function PortalLayout({
             <Menu className="w-6 h-6" />
           </button>
           <div className="flex items-center ml-auto">
-            <span className="text-sm font-medium text-gray-900">John Doe</span>
+            <span className="text-sm font-medium text-gray-900">
+              {userName || "Chưa có tên"}
+            </span>
             <User className="w-8 h-8 ml-4 text-gray-400 bg-gray-200 rounded-full p-1" />
           </div>
         </header>

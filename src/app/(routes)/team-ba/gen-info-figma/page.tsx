@@ -2,30 +2,19 @@
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useState } from "react";
+import { Button, Card, Input } from "antd";
+import { APIGetNode } from "@/app/apis/Figma";
 function GenInfoFigma() {
-  const xFigmaToken = "figd_wwMS0fwTaiG50Nzw7-yuLTK3d7t_gW7Z3AC7Cb67";
   const [idFigma, setIdFigma] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [nodes, setNodes] = useState<any[]>([]);
   const router = useRouter();
   const handleGetNode = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch(
-        `https://api.figma.com/v1/files/${idFigma}`,
-        {
-          method: "GET",
-          headers: {
-            "X-Figma-Token": xFigmaToken,
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
-      const data = await response.json();
+    setLoading(true);
+    const res = await APIGetNode(idFigma);
+    setLoading(false);
+    if (res.status === 200 || res.status === 201) {
+      const data = res.data;
       const page = data.document.children.find(
         (child: any) => child.name === "EIB_PTD"
       );
@@ -38,36 +27,40 @@ function GenInfoFigma() {
       if (!page) {
         throw new Error("Không tìm thấy trang này!");
       }
-      setLoading(false);
       setNodes(nodes);
-    } catch (error) {
-      console.error("Error fetching Figma nodes:", error);
     }
   };
 
   return (
     <div>
       <div className="flex gap-4 justify-around items-center mb-4">
-        <input
-          type="text"
+        <Input
+          placeholder="Nhập ID dự án Figma..."
           value={idFigma}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleGetNode();
+            }
+          }}
           onChange={({ target }) => setIdFigma(target.value)}
-          className="w-full border border-gray-300 rounded p-2"
         />
-        <button
+        <Button
           onClick={handleGetNode}
+          type="primary"
+          loading={loading}
           disabled={loading}
-          className=" whitespace-nowrap bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600"
         >
           {loading ? "Đang lấy các node..." : "Lấy node"}
-        </button>
+        </Button>
       </div>
 
       {nodes && (
-        <div className="grid grid-cols-6 gap-4">
+        <Card title={`Kết quả tìm kiếm: ${idFigma}`}>
           {nodes.map((node) => (
-            <button
+            <Card.Grid
               key={node.id}
+              style={{ width: "20%" }}
+              className="cursor-pointer text-center"
               onClick={() =>
                 router.push(
                   `${window.location.pathname}/${node.id.replace(
@@ -76,12 +69,14 @@ function GenInfoFigma() {
                   )}?idFigma=${idFigma}`
                 )
               }
-              className="bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600"
             >
               {node.name}
-            </button>
+            </Card.Grid>
           ))}
-        </div>
+        </Card>
+
+        // <div className="grid grid-cols-6 gap-4">
+        // </div>
       )}
     </div>
   );
