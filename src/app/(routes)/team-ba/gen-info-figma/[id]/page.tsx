@@ -35,9 +35,9 @@ function Page() {
         nodeData.map((node: any) => {
           if (node.children?.length) {
             return node.children.map((child: any) => {
-              if (listExcept.every((item) => !child.name.includes(item))) {
+              if (listExcept.indexOf(child.name) === -1) {
                 rs.push({
-                  name: child.name,
+                  name: child.characters || "(Trống)",
                   type: child.type,
                   absoluteBoundingBox: child.absoluteBoundingBox,
                   absoluteRenderBounds: child.absoluteRenderBounds,
@@ -48,7 +48,7 @@ function Page() {
           }
           if (listExcept.every((item) => !node.name.includes(item))) {
             rs.push({
-              name: node.name,
+              name: node.characters || "(Trống)",
               type: node.type,
               absoluteBoundingBox: node.absoluteBoundingBox,
               absoluteRenderBounds: node.absoluteRenderBounds,

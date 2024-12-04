@@ -15,7 +15,6 @@ function page() {
     setLoading(true);
     const res = await APILogin(loginInfo);
     setLoading(false);
-    console.log("ress", res);
     if (res.status === 200 || res.status === 201) {
       localStorage.setItem("user_NPDSEN", res.data.token);
       // Phân tích token, nếu bắt đầu token là teamba thì chuyển hướng sang trang team-ba
